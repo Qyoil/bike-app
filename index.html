@@ -131,6 +131,30 @@
             background-color: var(--primary-dark);
         }
 
+        /* 탭 메뉴 */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-sub);
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
         .search-box {
             width: 100%;
             padding: 12px 16px;
@@ -177,6 +201,7 @@
             box-shadow: 0 3px 8px var(--shadow);
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             gap: 10px;
         }
 
@@ -185,10 +210,24 @@
             border-color: var(--danger-border);
         }
 
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
         .station-name {
             font-size: 16px;
             font-weight: bold;
             word-break: keep-all;
+        }
+
+        .fav-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
         }
 
         .station-info {
@@ -217,7 +256,31 @@
             color: var(--danger-text);
             font-size: 12px;
             font-weight: bold;
-            margin-top: 4px;
+        }
+
+        .card-footer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rent-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .rent-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         .update-time {
@@ -242,8 +305,192 @@
                     <button class="btn" onclick="init()">🔄 새로고침</button>
                 </div>
             </div>
-            <input type="text" id="searchInput" class="search-box" placeholder="대여소 이름을 검색하세요..." oninput="onSearch()">
+
+            <!-- 카테고리 탭 -->
+            <div class="category-tabs">
+                <button class="tab-btn active" onclick="switchCategory('all', this)">📋 전체 목록</button>
+                <button class="tab-btn" onclick="switchCategory('fav', this)">⭐ 즐겨찾기</button>
+                <button class="tab-btn" onclick="switchCategory('frequent', this)">🔥 자주 빌린 곳</button>
+            </div>
+
+            <input type="text" id="searchInput" class="search-box" placeholder="대여소 이름을 검색하세요..." oninput="filterStations()">
         </header>
 
         <div class="stats-summary" id="stats"></div>
-        <div class="station-grid" id="grid
+        <div class="station-grid" id="grid"></div>
+        <div class="update-time" id="updateTime"></div>
+    </div>
+
+    <script>
+        const SAMPLE = [{"rentBikeStatus":{"list_total_count":5,"RESULT":{"CODE":"INFO-000","MESSAGE":"정상 처리되었습니다."},"row":[{"rackTotCnt":"15","stationName":"102. 망원역 1번출구 앞","parkingBikeTotCnt":"13","shared":"87","stationLatitude":"37.55564880","stationLongitude":"126.91062927","stationId":"ST-4"},{"rackTotCnt":"14","stationName":"103. 망원역 2번출구 앞","parkingBikeTotCnt":"12","shared":"86","stationLatitude":"37.55495071","stationLongitude":"126.91083527","stationId":"ST-5"},{"rackTotCnt":"13","stationName":"104. 합정역 1번출구 앞","parkingBikeTotCnt":"17","shared":"131","stationLatitude":"37.55073929","stationLongitude":"126.91508484","stationId":"ST-6"},{"rackTotCnt":"5","stationName":"105. 합정역 5번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.55000687","stationLongitude":"126.91482544","stationId":"ST-7"},{"rackTotCnt":"12","stationName":"106. 합정역 7번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.54864502","stationLongitude":"126.91282654","stationId":"ST-8"}]}}];
+
+        let stationsData = [];
+        let currentCategory = 'all';
+        let favorites = JSON.parse(localStorage.getItem('fav_stations') || '[]');
+        let rentHistory = JSON.parse(localStorage.getItem('rent_history') || '{}');
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('themeBtn').innerText = '🌙 다크모드';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeBtn').innerText = '☀️ 라이트모드';
+            }
+        }
+
+        function parseData(row) {
+            return row.map(item => ({
+                stationName: item.stationName,
+                parkingBikeTotCnt: parseInt(item.parkingBikeTotCnt, 10) || 0,
+                rackTotCnt: parseInt(item.rackTotCnt, 10) || 0,
+                shared: parseInt(item.shared, 10) || 0
+            }));
+        }
+
+        function switchCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterStations();
+        }
+
+        function toggleFav(name) {
+            if (favorites.includes(name)) {
+                favorites = favorites.filter(n => n !== name);
+            } else {
+                favorites.push(name);
+            }
+            localStorage.setItem('fav_stations', JSON.stringify(favorites));
+            filterStations();
+        }
+
+        function rentBike(name) {
+            rentHistory[name] = (rentHistory[name] || 0) + 1;
+            localStorage.setItem('rent_history', JSON.stringify(rentHistory));
+            alert(`[${name}] 대여가 기록되었습니다! 🚲`);
+            filterStations();
+        }
+
+        function filterStations() {
+            const kw = document.getElementById('searchInput').value.toLowerCase();
+            let list = [...stationsData];
+
+            if (currentCategory === 'fav') {
+                list = list.filter(s => favorites.includes(s.stationName));
+            } else if (currentCategory === 'frequent') {
+                list = list.filter(s => (rentHistory[s.stationName] || 0) > 0)
+                            .sort((a, b) => (rentHistory[b.stationName] || 0) - (rentHistory[a.stationName] || 0));
+            }
+
+            const filtered = list.filter(s => s.stationName.toLowerCase().includes(kw));
+            render(filtered);
+            renderStats(filtered);
+        }
+
+        function renderStats(list) {
+            const stats = document.getElementById('stats');
+            const total = list.length;
+            const bikes = list.reduce((sum, s) => sum + s.parkingBikeTotCnt, 0);
+            const empty = list.filter(s => s.parkingBikeTotCnt === 0).length;
+
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-label">조회 대여소 수</span>
+                    <span class="stat-value">${total}개</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">총 대여 가능 자전거</span>
+                    <span class="stat-value">🚲 ${bikes}대</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">자전거 0대 대여소</span>
+                    <span class="stat-value" style="color:var(--danger-text);">${empty}개</span>
+                </div>
+            `;
+        }
+
+        function render(list) {
+            const grid = document.getElementById('grid');
+
+            if (list.length === 0) {
+                let msg = "검색 결과가 없습니다. 🔍";
+                if (currentCategory === 'fav') msg = "등록된 즐겨찾기 대여소가 없습니다. ⭐를 눌러 추가해보세요!";
+                if (currentCategory === 'frequent') msg = "아직 대여 기록이 있는 대여소가 없습니다. 🚲";
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-sub);">${msg}</div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(s => {
+                const isEmpty = s.parkingBikeTotCnt === 0;
+                const isFav = favorites.includes(s.stationName);
+                const count = rentHistory[s.stationName] || 0;
+
+                return `
+                    <div class="station-card ${isEmpty ? 'empty' : ''}">
+                        <div>
+                            <div class="card-top">
+                                <div class="station-name">📍 ${s.stationName}</div>
+                                <button class="fav-btn" onclick="toggleFav('${s.stationName}')">${isFav ? '⭐' : '☆'}</button>
+                            </div>
+                            <div class="station-info" style="margin-top:8px;">
+                                <div class="info-row">
+                                    <span>자전거 수</span>
+                                    <span class="bike-count">${s.parkingBikeTotCnt}대</span>
+                                </div>
+                                <div class="info-row">
+                                    <span>거치대 수</span>
+                                    <span>${s.rackTotCnt}개</span>
+                                </div>
+                                <div class="info-row">
+                                    <span>거치율</span>
+                                    <span>${s.shared}%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            ${isEmpty ? `<div class="empty-tag" style="margin-bottom:6px;">🚨 자전거 없음 (0대)</div>` : ''}
+                            <div class="card-footer">
+                                <span style="font-size:11px; color:var(--text-sub);">이용 횟수: ${count}회</span>
+                                <button class="rent-btn" ${isEmpty ? 'disabled' : ''} onclick="rentBike('${s.stationName}')">🚲 대여하기</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function init() {
+            const badge = document.getElementById('badge');
+            
+            fetch('/api/bike')
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.rentBikeStatus && data.rentBikeStatus.row) {
+                        stationsData = parseData(data.rentBikeStatus.row);
+                        badge.className = 'badge badge-live';
+                        badge.innerText = '실시간 데이터';
+                    } else {
+                        throw new Error();
+                    }
+                })
+                .catch(() => {
+                    stationsData = parseData(SAMPLE[0].rentBikeStatus.row);
+                    badge.className = 'badge badge-sample';
+                    badge.innerText = '샘플 데이터';
+                })
+                .finally(() => {
+                    filterStations();
+                    document.getElementById('updateTime').innerText = `마지막 갱신 시각: ${new Date().toLocaleTimeString('ko-KR')}`;
+                });
+        }
+
+        init();
+    </script>
+</body>
+</html>

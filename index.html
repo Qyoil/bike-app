@@ -18,6 +18,23 @@
             --danger-text: #d73a49;
             --warning-bg: #fff8c5;
             --warning-text: #9a6700;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --primary: #00c76f;
+            --primary-dark: #00a259;
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --text-sub: #8b949e;
+            --border-color: #30363d;
+            --danger-bg: #491f24;
+            --danger-border: #f85149;
+            --danger-text: #ff7b72;
+            --warning-bg: #3b2e00;
+            --warning-text: #d29922;
+            --shadow: rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -25,33 +42,30 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 16px;
-            display: flex;
-            justify-content: center;
+            padding: 20px;
         }
 
         .container {
-            width: 100%;
             max-width: 900px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            margin: 0 auto;
         }
 
-        /* Header */
         header {
             background-color: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px var(--shadow);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .header-top {
@@ -62,427 +76,367 @@
             gap: 10px;
         }
 
-        .title-area {
+        .header-title-wrapper {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        .bike-logo {
+            font-size: 28px;
+        }
+
         h1 {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
+            font-size: 24px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .badge-sample {
-            display: inline-block;
-            background-color: var(--warning-bg);
-            color: var(--warning-text);
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 3px 8px;
-            border-radius: 12px;
-            border: 1px solid var(--warning-text);
-        }
-
-        .badge-live {
-            display: inline-block;
-            background-color: #e6ffed;
-            color: var(--primary-dark);
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 3px 8px;
-            border-radius: 12px;
-            border: 1px solid var(--primary);
-        }
-
-        .info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.875rem;
-            color: var(--text-sub);
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .btn-refresh {
+        .theme-toggle-btn, .refresh-btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
+            font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .btn-refresh:hover {
+        .theme-toggle-btn:hover, .refresh-btn:hover {
             background-color: var(--primary-dark);
         }
 
-        .btn-refresh:active {
-            transform: scale(0.97);
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        /* Search Section */
+        .badge-sample {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            border: 1px solid var(--warning-text);
+        }
+
+        .badge-live {
+            background-color: #dafbe1;
+            color: #116329;
+            border: 1px solid #2ea043;
+        }
+
         .search-box {
-            position: relative;
-            width: 100%;
-        }
-
-        .search-input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 15px;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        .search-input:focus {
+        .search-box:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 176, 96, 0.15);
         }
 
-        /* Stats Summary */
         .stats-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-            text-align: center;
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .stat-card .num {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-top: 4px;
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-sub);
         }
 
-        /* Station List View */
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
         .station-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
         }
 
         .station-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 3px 8px var(--shadow);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.15s, box-shadow 0.15s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .station-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        /* 자전거가 0대인 곳 스타일 */
         .station-card.empty {
             background-color: var(--danger-bg);
             border-color: var(--danger-border);
         }
 
         .station-name {
-            font-size: 1rem;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 700;
             margin-bottom: 12px;
             word-break: keep-all;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
         }
 
-        .station-card.empty .station-name {
-            color: var(--danger-text);
+        .station-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 14px;
         }
 
-        .details {
+        .info-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
+            align-items: center;
         }
 
         .bike-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .station-card.empty .bike-count {
+            color: var(--danger-text);
+        }
+
+        .empty-warning {
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--danger-text);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
 
-        .bike-count .label {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-        }
-
-        .station-card.empty .bike-count .label {
-            color: var(--danger-text);
-            opacity: 0.8;
-        }
-
-        .bike-count .val {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary-dark);
-        }
-
-        .station-card.empty .bike-count .val {
-            color: var(--danger-text);
-        }
-
-        .sub-info {
-            text-align: right;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-        }
-
-        .empty-message {
-            background-color: var(--card-bg);
-            padding: 40px;
+        .loading, .error-message {
             text-align: center;
-            border-radius: 8px;
+            padding: 40px;
+            font-size: 16px;
             color: var(--text-sub);
             grid-column: 1 / -1;
         }
 
-        /* Loading Spinner */
-        .loading {
-            text-align: center;
-            padding: 40px;
+        .update-time {
+            font-size: 12px;
             color: var(--text-sub);
-            font-size: 1.1rem;
-        }
-
-        @media (max-width: 480px) {
-            .station-grid {
-                grid-template-columns: 1fr;
-            }
+            text-align: right;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
         <header>
             <div class="header-top">
-                <div class="title-area">
-                    <h1>🚲 서울 따릉이 대여소 현황</h1>
-                    <span id="dataStatusBadge" class="badge-live">실시간</span>
+                <div class="header-title-wrapper">
+                    <span class="bike-logo">🚲</span>
+                    <h1>서울 따릉이 대여소 현황</h1>
                 </div>
-                <button class="btn-refresh" id="refreshBtn" onclick="fetchBikeData()">
-                    🔄 새로고침
-                </button>
+                <div class="header-actions">
+                    <div id="dataSourceBadge"></div>
+                    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 다크모드</button>
+                    <button class="refresh-btn" onclick="fetchBikeData()">🔄 새로고침</button>
+                </div>
             </div>
-            <div class="info-bar">
-                <span>마지막 갱신 시각: <strong id="lastUpdated">-</strong></span>
-                <span id="totalStations">총 대여소: 0곳</span>
-            </div>
+            <input type="text" id="searchInput" class="search-box" placeholder="대여소 이름을 검색하세요 (예: 망원역, 합정역)..." oninput="filterStations()">
         </header>
 
-        <!-- Search Bar -->
-        <div class="search-box">
-            <input 
-                type="text" 
-                id="searchInput" 
-                class="search-input" 
-                placeholder="대여소 이름 검색 (예: 망원역, 합정역...)" 
-                oninput="handleSearch()"
-            >
+        <div class="stats-summary" id="statsSummary"></div>
+
+        <div class="station-grid" id="stationGrid">
+            <div class="loading">데이터를 불러오는 중입니다... 🚲</div>
         </div>
 
-        <!-- Stats Summary -->
-        <div class="stats-summary">
-            <div class="stat-card">
-                <div style="font-size:0.8rem; color:var(--text-sub);">검색된 대여소</div>
-                <div class="num" id="statSearchCount">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="font-size:0.8rem; color:var(--text-sub);">대여 가능 자전거</div>
-                <div class="num" id="statTotalBikes" style="color: var(--primary-dark);">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="font-size:0.8rem; color:var(--text-sub);">대여 불가 (0대)</div>
-                <div class="num" id="statEmptyCount" style="color: var(--danger-text);">0</div>
-            </div>
-        </div>
-
-        <!-- Station List View -->
-        <main id="stationGrid" class="station-grid">
-            <div class="loading">데이터를 불러오는 중입니다...</div>
-        </main>
+        <div class="update-time" id="updateTime"></div>
     </div>
 
     <script>
-        // 요구사항에 명시된 샘플 데이터
-        const SAMPLE_DATA = [{"rentBikeStatus":{"list_total_count":5,"RESULT":{"CODE":"INFO-000","MESSAGE":"정상 처리되었습니다."},"row":[{"rackTotCnt":"15","stationName":"102. 망원역 1번출구 앞","parkingBikeTotCnt":"13","shared":"87","stationLatitude":"37.55564880","stationLongitude":"126.91062927","stationId":"ST-4"},{"rackTotCnt":"14","stationName":"103. 망원역 2번출구 앞","parkingBikeTotCnt":"12","shared":"86","stationLatitude":"37.55495071","stationLongitude":"126.91083527","stationId":"ST-5"},{"rackTotCnt":"13","stationName":"104. 합정역 1번출구 앞","parkingBikeTotCnt":"17","shared":"131","stationLatitude":"37.55073929","stationLongitude":"126.91508484","stationId":"ST-6"},{"rackTotCnt":"5","stationName":"105. 합정역 5번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.55000687","stationLongitude":"126.91482544","stationId":"ST-7"},{"rackTotCnt":"12","stationName":"106. 합정역 7번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.54864502","stationLongitude":"126.91282654","stationId":"ST-8"}]}}];
-
-        let allStations = []; // 전체 대여소 데이터 저장
+        let allStations = [];
         let isSampleData = false;
 
-        // 페이지 로드 시 데이터 호출
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchBikeData();
-        });
+        const SAMPLE_DATA = [{"rentBikeStatus":{"list_total_count":5,"RESULT":{"CODE":"INFO-000","MESSAGE":"정상 처리되었습니다."},"row":[{"rackTotCnt":"15","stationName":"102. 망원역 1번출구 앞","parkingBikeTotCnt":"13","shared":"87","stationLatitude":"37.55564880","stationLongitude":"126.91062927","stationId":"ST-4"},{"rackTotCnt":"14","stationName":"103. 망원역 2번출구 앞","parkingBikeTotCnt":"12","shared":"86","stationLatitude":"37.55495071","stationLongitude":"126.91083527","stationId":"ST-5"},{"rackTotCnt":"13","stationName":"104. 합정역 1번출구 앞","parkingBikeTotCnt":"17","shared":"131","stationLatitude":"37.55073929","stationLongitude":"126.91508484","stationId":"ST-6"},{"rackTotCnt":"5","stationName":"105. 합정역 5번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.55000687","stationLongitude":"126.91482544","stationId":"ST-7"},{"rackTotCnt":"12","stationName":"106. 합정역 7번출구 앞","parkingBikeTotCnt":"0","shared":"0","stationLatitude":"37.54864502","stationLongitude":"126.91282654","stationId":"ST-8"}]}}];
 
-        // 데이터 불러오기 함수
+        // 다크모드 초기화 및 토글
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggleBtn').innerText = '☀️ 라이트모드';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const btn = document.getElementById('themeToggleBtn');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                btn.innerText = '🌙 다크모드';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.innerText = '☀️ 라이트모드';
+            }
+        }
+
         async function fetchBikeData() {
-            const gridContainer = document.getElementById('stationGrid');
-            const refreshBtn = document.getElementById('refreshBtn');
-            
-            refreshBtn.disabled = true;
-            refreshBtn.style.opacity = '0.6';
+            const grid = document.getElementById('stationGrid');
+            grid.innerHTML = `<div class="loading">데이터를 불러오는 중입니다... 🚲</div>`;
 
             try {
-                // API 호출 시도
                 const response = await fetch('/api/bike');
-                if (!response.ok) {
-                    throw new Error(`HTTP Error status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error('API 응답 실패');
                 const data = await response.json();
                 
-                // 데이터 파싱 (단일 객체 형태 혹은 배열 형태 대응)
-                let rawRow = [];
-                if (Array.isArray(data) && data[0]?.rentBikeStatus?.row) {
-                    rawRow = data[0].rentBikeStatus.row;
-                } else if (data?.rentBikeStatus?.row) {
-                    rawRow = data.rentBikeStatus.row;
-                } else {
-                    throw new Error('Invalid Data Structure');
-                }
-
-                allStations = processData(rawRow);
+                // 구조 분해 및 파싱
+                allStations = data.rentBikeStatus.row.map(item => ({
+                    stationName: item.stationName,
+                    parkingBikeTotCnt: parseInt(item.parkingBikeTotCnt, 10),
+                    rackTotCnt: parseInt(item.rackTotCnt, 10),
+                    shared: parseInt(item.shared, 10)
+                }));
                 isSampleData = false;
             } catch (error) {
-                console.warn('API 불러오기 실패. 샘플 데이터를 사용합니다.', error);
-                
-                // 실패 시 샘플 데이터 사용
+                console.warn('API 호출 실패, 샘플 데이터를 로드합니다.', error);
                 const sampleRow = SAMPLE_DATA[0].rentBikeStatus.row;
-                allStations = processData(sampleRow);
+                allStations = sampleRow.map(item => ({
+                    stationName: item.stationName,
+                    parkingBikeTotCnt: parseInt(item.parkingBikeTotCnt, 10),
+                    rackTotCnt: parseInt(item.rackTotCnt, 10),
+                    shared: parseInt(item.shared, 10)
+                }));
                 isSampleData = true;
-            } finally {
-                refreshBtn.disabled = false;
-                refreshBtn.style.opacity = '1';
-                
-                // UI 업데이트
-                updateHeaderInfo();
-                renderStations();
             }
+
+            updateBadge();
+            filterStations();
+            updateTimeDisplay();
         }
 
-        // 데이터 전처리 (문자열 -> 숫자 변환)
-        function processData(rowList) {
-            return rowList.map(item => ({
-                stationName: item.stationName || '이름 없음',
-                parkingBikeTotCnt: parseInt(item.parkingBikeTotCnt, 10) || 0,
-                rackTotCnt: parseInt(item.rackTotCnt, 10) || 0,
-                shared: parseInt(item.shared, 10) || 0,
-                stationId: item.stationId
-            }));
-        }
-
-        // 헤더 뱃지 및 시각 업데이트
-        function updateHeaderInfo() {
-            const badge = document.getElementById('dataStatusBadge');
-            const lastUpdated = document.getElementById('lastUpdated');
-            const totalStations = document.getElementById('totalStations');
-
+        function updateBadge() {
+            const badgeContainer = document.getElementById('dataSourceBadge');
             if (isSampleData) {
-                badge.textContent = '샘플 데이터';
-                badge.className = 'badge-sample';
+                badgeContainer.innerHTML = `<span class="badge badge-sample">⚠️ 샘플 데이터</span>`;
             } else {
-                badge.textContent = '실시간 데이터';
-                badge.className = 'badge-live';
+                badgeContainer.innerHTML = `<span class="badge badge-live">🟢 실시간 데이터</span>`;
             }
-
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            lastUpdated.textContent = timeString;
-            totalStations.textContent = `총 대여소: ${allStations.length}곳`;
         }
 
-        // 검색 처리
-        function handleSearch() {
-            renderStations();
+        function filterStations() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allStations.filter(s => s.stationName.toLowerCase().includes(keyword));
+            render(filtered);
+            renderStats(filtered);
         }
 
-        // 화면에 대여소 카드리스트 렌더링
-        function renderStations() {
-            const searchInput = document.getElementById('searchInput');
-            const keyword = searchInput.value.trim().toLowerCase();
-            const gridContainer = document.getElementById('stationGrid');
+        function renderStats(stations) {
+            const totalStations = stations.length;
+            const totalBikes = stations.reduce((acc, cur) => acc + cur.parkingBikeTotCnt, 0);
+            const emptyStations = stations.filter(s => s.parkingBikeTotCnt === 0).length;
 
-            // 필터링
-            const filteredStations = allStations.filter(station => 
-                station.stationName.toLowerCase().includes(keyword)
-            );
+            const summaryEl = document.getElementById('statsSummary');
+            summaryEl.innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-label">조회 대여소 수</span>
+                    <span class="stat-value">${totalStations}개</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">총 대여 가능 자전거</span>
+                    <span class="stat-value">🚲 ${totalBikes}대</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">자전거 0대 대여소</span>
+                    <span class="stat-value" style="color: var(--danger-text);">${emptyStations}개</span>
+                </div>
+            `;
+        }
 
-            // 요약 정보 계산
-            let totalBikes = 0;
-            let emptyCount = 0;
-
-            filteredStations.forEach(s => {
-                totalBikes += s.parkingBikeTotCnt;
-                if (s.parkingBikeTotCnt === 0) emptyCount++;
-            });
-
-            document.getElementById('statSearchCount').textContent = `${filteredStations.length}개`;
-            document.getElementById('statTotalBikes').textContent = `${totalBikes}대`;
-            document.getElementById('statEmptyCount').textContent = `${emptyCount}곳`;
-
-            // 목록 비우기
-            gridContainer.innerHTML = '';
-
-            if (filteredStations.length === 0) {
-                gridContainer.innerHTML = `<div class="empty-message">검색 결과가 없습니다.</div>`;
+        function render(stations) {
+            const grid = document.getElementById('stationGrid');
+            
+            if (stations.length === 0) {
+                grid.innerHTML = `<div class="loading">검색 결과가 없습니다. 🔍</div>`;
                 return;
             }
 
-            // 카드 생성 및 삽입
-            filteredStations.forEach(station => {
+            grid.innerHTML = stations.map(station => {
                 const isEmpty = station.parkingBikeTotCnt === 0;
-                
-                const card = document.createElement('div');
-                card.className = `station-card ${isEmpty ? 'empty' : ''}`;
-                
-                card.innerHTML = `
-                    <div class="station-name">${escapeHtml(station.stationName)}</div>
-                    <div class="details">
-                        <div class="bike-count">
-                            <span class="label">대여 가능</span>
-                            <span class="val">${station.parkingBikeTotCnt}대</span>
+                return `
+                    <div class="station-card ${isEmpty ? 'empty' : ''}">
+                        <div>
+                            <div class="station-name">
+                                <span>📍</span> ${station.stationName}
+                            </div>
+                            <div class="station-info">
+                                <div class="info-row">
+                                    <span>자전거 보유 수</span>
+                                    <span class="bike-count">${station.parkingBikeTotCnt}대</span>
+                                </div>
+                                <div class="info-row">
+                                    <span>전체 거치대</span>
+                                    <span>${station.rackTotCnt}개</span>
+                                </div>
+                                <div class="info-row">
+                                    <span>거치율</span>
+                                    <span>${station.shared}%</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="sub-info">
-                            <div>총 거치대: ${station.rackTotCnt}개</div>
-                            <div>거치율: ${station.shared}%</div>
-                        </div>
+                        ${isEmpty ? `<div class="empty-warning">🚨 자전거가 부족합니다 (0대)</div>` : ''}
                     </div>
                 `;
-                gridContainer.appendChild(card);
-            });
+            }).join('');
         }
 
-        // XSS 방지를 위한 텍스트 이스케이프
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.innerText = text;
-            return div.innerHTML;
+        function updateTimeDisplay() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ko-KR');
+            document.getElementById('updateTime').innerText = `마지막 갱신 시각: ${timeString}`;
         }
+
+        // 초기 실행
+        initTheme();
+        fetchBikeData();
     </script>
 </body>
 </html>
